@@ -1,5 +1,8 @@
 package net.maploop.leaguesaddon.listeners;
 
+import net.maploop.leaguesaddon.menus.MysterywellMenu;
+import net.maploop.leaguesaddon.menus.PlayerMenuUtility;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +20,10 @@ public class PlayerInteract implements Listener {
         ItemStack item = player.getItemInHand();
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getClickedBlock().getType().equals(Material.ENDER_PORTAL_FRAME)) {
+                new MysterywellMenu(new PlayerMenuUtility(player)).open();
+            }
+
             if (item == null) return;
             if (!(item.hasItemMeta())) return;
 

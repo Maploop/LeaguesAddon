@@ -2,10 +2,8 @@ package net.maploop.leaguesaddon;
 
 import net.maploop.leaguesaddon.commands.PerksCommand;
 import net.maploop.leaguesaddon.commands.ResetperksCommand;
-import net.maploop.leaguesaddon.listeners.InventoryClick;
-import net.maploop.leaguesaddon.listeners.PlayerDeath;
-import net.maploop.leaguesaddon.listeners.PlayerInteract;
-import net.maploop.leaguesaddon.listeners.PlayerJoin;
+import net.maploop.leaguesaddon.commands.SetmysterywellCommand;
+import net.maploop.leaguesaddon.listeners.*;
 import net.maploop.leaguesaddon.menus.PlayerMenuUtility;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -28,18 +26,8 @@ public final class LeaguesAddon extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if (!setupEconomy() ) {
-            log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-
         INSTANCE = this;
-        createDataFile();
-        loadCommands();
-        loadListeners();
-
-        log.severe(String.format("[%s] - Enabled plugin!", getDescription().getName()));
+        init();
     }
 
     @Override
@@ -47,9 +35,23 @@ public final class LeaguesAddon extends JavaPlugin {
         getLogger().info("disabled!");
     }
 
+    private void init() {
+        if (!setupEconomy() ) {
+            log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        loadListeners();
+        loadCommands();
+        createDataFile();
+        log.severe(String.format("[%s] - Enabled plugin!", getDescription().getName()));
+    }
+
     private void loadCommands() {
         this.getCommand("perks").setExecutor(new PerksCommand());
         this.getCommand("resetperks").setExecutor(new ResetperksCommand());
+        this.getCommand("setmysterywell").setExecutor(new SetmysterywellCommand());
     }
 
     private void loadListeners() {
@@ -57,6 +59,7 @@ public final class LeaguesAddon extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerDeath(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerInteract(), this);
+        this.getServer().getPluginManager().registerEvents(new BlockBreak(), this);
     }
 
     private boolean setupEconomy() {
