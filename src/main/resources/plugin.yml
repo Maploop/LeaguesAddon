@@ -1,0 +1,9 @@
+name: LeaguesAddon
+version: ${project.version}
+main: net.maploop.leaguesaddon.LeaguesAddon
+authors: [ Maploop ]
+description: Just something to improve leagues!
+
+commands:
+  perks:
+  resetperks:
